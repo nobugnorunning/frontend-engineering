@@ -9,14 +9,6 @@ const { transformFromAst } = require("babel-core")
 
 const configs = require('./demo-webpack.config');
 
-const defaultConfigs = {
-  output: {
-    dirName: "dist",
-    clean: true,
-  },
-  plugins: []
-}
-
 let ID = 0;
 
 // filename 参数为文件路径，读取内容并提取它的依赖关系
@@ -106,26 +98,92 @@ function bundle(graph) {
   require(0);
 })({${modules}})`
 
-  return result
-}
-
-const graph = createGraph('./examples/entry.js');
-
-const result = bundle(graph);
-
-const isExist = fs.existsSync('dist')
-
-if (isExist) {
-  // 如果存在，则清空 dist 目录
-  fs.rmSync('dist', { recursive: true });
-}
-
-fs.mkdir('dist', (err) => {
-  if (!err) {
-    fs.writeFile('dist/main.js', result, (subErr) => {
-      if (!subErr) {
-        console.log('package success');
-      }
-    })
+  const assets = {}
+  assets[configs.output.filename] = {
+    source: () => result,
+    size: () => result.length
   }
-})
+
+  const compiler = {
+    options: configs,
+    hooks: {
+      done: {
+        tap: (pluginName, handler) => {
+          compiler._doneHandler = handler;
+        }
+      }
+    }
+  }
+
+  const compilation = {
+    assets: assets,
+    entrypoints: new Map(Object.entries({
+      [path.basename(configs.entry, path.extname(configs.entry))]: {}
+    }))
+  }
+
+  // 调用插件
+  configs.plugins.forEach(plugin => {
+    plugin.apply(compiler)
+  })
+
+  return new Promise((resolve, reject) => {
+    // 如果这里有其他生命周期做的事情，在这里调用 对应的 处理函数，把处理结果返回
+
+    if ('_emitHandler' in compiler) {
+      compiler._emitHandler(compilation, err => {
+        if (err) {
+          return reject(err);
+        } else {
+          resolve(compilation.assets);
+        }
+      })
+    } else {
+      resolve(compilation.assets);
+    }
+  }).then((assets) => {
+
+    // 写入本地磁盘，生成打包后的文件
+    const isExist = fs.existsSync(configs.output.dirName)
+
+    if (isExist && configs.output.clean) {
+      // 如果存在，则清空 dist 目录
+      fs.rmSync(configs.output.dirName, { recursive: true });
+    }
+
+    if (!fs.existsSync(configs.output.dirName)) {
+      fs.mkdirSync(configs.output.dirName, { recursive: true });
+    }
+
+    const ps = Object.entries(assets).map(([assetName, { source }]) => {
+      const filePath = path.resolve(configs.output.dirName, assetName);
+      const content = source()
+
+      return new Promise((res, rej) => {
+        fs.writeFile(filePath, content, (err) => {
+          if (err) {
+            rej(err)
+          } else {
+            res()
+          }
+        })
+      })
+    })
+
+    return Promise.all(ps).then(() => {
+      // 打包结束后，调用 done 钩子
+      if ('_doneHandler' in compiler) {
+        compiler._doneHandler(compilation);
+      }
+      console.log('package success')
+    });
+  })
+}
+
+// 构建依赖图
+const graph = createGraph(configs.entry);
+
+// 打包
+bundle(graph);
+
+
