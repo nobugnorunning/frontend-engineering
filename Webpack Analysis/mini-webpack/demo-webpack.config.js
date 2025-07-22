@@ -9,5 +9,11 @@ module.exports = {
   },
   plugins: [
     new TestPlugin()
+  ],
+  rules: [
+    {
+      test: /\.css/,
+      use: "my-css-loader",
+    }
   ]
 }

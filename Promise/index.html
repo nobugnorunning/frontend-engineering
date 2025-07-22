@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+
+<script type="module">
+    import { MyPromise } from './my-promise.js'
+
+    const p = new MyPromise((resolve, reject) => {
+      setTimeout(() => {
+        resolve('213123')
+      }, 2000)
+    })
+    const p1 =  new MyPromise((resolve, reject) => {
+      setTimeout(() => {
+        resolve('p1')
+      }, 1000)
+    })
+    const p2 = new MyPromise((resolve, reject) => {
+      setTimeout(() => {
+        resolve('p2')
+      }, 2000)
+    })
+    
+    p.then(res => {
+      console.log('onfulfilled', res)
+    }).catch(error => {
+      console.log('error', error)
+    })
+
+    // MyPromise.race([p, p1, p2]).then((result) => {
+    //   console.log("MyPromise.race", result)
+    // })
+    //
+    // MyPromise.all([p1, p2]).then((results) => {
+    //   console.log('MyPromise.all', results)
+    // })
+</script>
+</body>
+</html>

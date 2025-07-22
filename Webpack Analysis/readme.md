@@ -72,3 +72,8 @@ function __webpack_require__(moduleId) {
 // 0 假设是入口文件的 moduleId
 __webpack_require__(0)
 ```
+
+
+#### Loader
+
+> 就是把 非js 文件转成 js 文件

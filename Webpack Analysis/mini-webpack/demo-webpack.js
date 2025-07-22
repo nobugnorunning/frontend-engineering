@@ -77,10 +77,11 @@ function createGraph(entry) {
 function bundle(graph) {
   let modules = '';
 
+  // TODO 待改造，希望生成一个缓存对象，创建模块加载器加载对应内容
   graph.forEach((mod) => {
     modules += `${mod.id}: [
-    function (require, module, exports) { ${mod.code} },
-    ${JSON.stringify(mod.mapping)},
+      function (require, module, exports) { ${mod.code} },
+      ${JSON.stringify(mod.mapping)},
     ],`
   })
 
