@@ -1,4 +1,5 @@
 import message from './message.js'
+import "./css/base.css"
 
 let p = document.createElement("p");
 

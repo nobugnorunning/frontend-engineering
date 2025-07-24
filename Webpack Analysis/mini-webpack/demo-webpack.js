@@ -29,6 +29,7 @@ function createAsset(filename) {
 
   traverse(ast, {
     ImportDeclaration: ({ node }) => {
+      console.log(node)
       dependencies.push(node.source.value);
     }
   })
@@ -56,6 +57,8 @@ function createGraph(entry) {
 
   for (const asset of queue) {
     asset.mapping = {}
+
+    console.log(asset)
 
     // 获取该模块所在目录
     const dirname = path.dirname(asset.filename);
@@ -185,6 +188,6 @@ function bundle(graph) {
 const graph = createGraph(configs.entry);
 
 // 打包
-bundle(graph);
+bundle(graph)
 
 
