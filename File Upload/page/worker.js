@@ -33,7 +33,7 @@ onmessage = async (e) => {
         resolve({
           start,
           end,
-          index: i,
+          index: i + 1,
           chunkSize: blob.size,
           blob,
           buffer: chunkResult,

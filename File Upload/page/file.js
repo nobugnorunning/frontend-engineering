@@ -44,7 +44,8 @@ export default class FileSystem {
         worker.onmessage = (e) => {
           if (e.data?.length) {
             for (const datum of e.data) {
-              slices[datum.index] = datum
+              // chunkIndex 从 1 开始
+              slices[datum.index - 1] = datum
             }
           }
 
