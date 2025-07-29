@@ -25,3 +25,12 @@
 1. 验证文件完整性
 
 > 前端可使用哈希算法验证文件完整性（Merkel Tree），但是文件过大的情况计算非常耗时，最好放在后端验证，或者使用web worker
+
+
+#### 启动项目
+
+page下面打开 index.html
+
+nest-demo 运行 npm run start:dev  
+
+node v18+
