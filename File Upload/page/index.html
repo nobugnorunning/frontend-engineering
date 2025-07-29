@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/spark-md5@3.0.2/spark-md5.min.js"></script>
+
+    <style>
+        #table-list {
+            text-align: center;
+        }
+
+        .option-btn .option-btn--delete {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<input id="ipt" type="file"><button id="upload-btn">上传选择的文件</button>
+
+<table id="table-list" border>
+    <colgroup>
+        <col width="150">
+        <col width="120">
+        <col width="400">
+        <col width="80">
+        <col width="120">
+    </colgroup>
+    <thead>
+        <tr>
+            <th>文件名</th>
+            <th>文件大小</th>
+            <th>MD5</th>
+            <th>进度</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+
+    <tbody id="table-list__body">
+
+    </tbody>
+</table>
+
+<script type="module" src="./index.js"></script>
+</body>
+</html>
