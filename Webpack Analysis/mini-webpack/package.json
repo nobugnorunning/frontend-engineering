@@ -1,0 +1,24 @@
+{
+  "name": "mini-webpack",
+  "version": "1.0.0",
+  "main": "demo-webpack.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/node": "^24.0.13",
+    "babel-core": "^6.26.3",
+    "babel-traverse": "^6.26.0",
+    "babylon": "^6.18.0"
+  },
+  "dependencies": {
+    "@babel/parser": "^7.28.0",
+    "babel-preset-env": "^1.7.0",
+    "fs-extra": "^11.3.0",
+    "tapable": "^2.2.2"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "name": "babel-analysis",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "compile": "node run.js --target src --out-dir lib"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@babel/cli": "^7.28.0",
+    "@babel/core": "^7.28.0",
+    "@babel/plugin-transform-arrow-functions": "^7.27.1",
+    "@babel/preset-env": "^7.28.0",
+    "@types/node": "^24.0.13",
+    "babel-traverse": "^6.26.0",
+    "babylon": "^6.18.0"
+  }
+}

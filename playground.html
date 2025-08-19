@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+</head>
+<body>
+
+<div id="app"></div>
+
+<script>
+  function useValve(fn) {
+    if (!(typeof fn === "function")) {
+      console.error("param `fn` must be a function");
+      return fn;
+    }
+
+    let locked = false;
+
+    return function (...args) {
+      if (locked) {
+        return new Promise((resolve, reject) => {
+          reject('重复函数签名，此次未调用')
+        })
+      }
+
+      locked = true;
+
+      let ret = fn.call(null, ...args);
+
+      return new Promise((resolve, reject) => {
+        if (ret instanceof Promise) {
+          ret.then(resolve).catch(reject).finally(() => {
+            locked = false;
+          });
+        } else {
+          locked = false;
+          resolve(ret);
+        }
+      });
+    };
+  }
+
+  function getData(text) {
+    return new Promise(resolve => {
+      resolve("getData called: " + text);
+    });
+  }
+
+  const valveGetData = useValve(getData);
+
+  const CompA = {
+    name: "CompA",
+    template: `<div> comp a </div>`,
+    created() {
+      valveGetData("created").then((data) => {
+        console.log(data);
+      });
+    },
+    activated() {
+      valveGetData("activated").then((data) => {
+        console.log(data);
+      });
+    }
+  };
+
+  const CompB = {
+    name: "CompB",
+    template: `<div> comp b </div>`
+  };
+
+  new Vue({
+    el: "#app",
+    data: {
+      currentView: "CompA"
+    },
+    components: {
+      CompA,
+      CompB
+    },
+    template: `
+      <div>
+        <button @click="currentView = 'CompA'">切换 A</button>
+        <button @click="currentView = 'CompB'">切换 B</button>
+
+        <keep-alive>
+          <component :is="currentView" />
+        </keep-alive>
+      </div>
+    `
+  });
+</script>
+</body>
+</html>
